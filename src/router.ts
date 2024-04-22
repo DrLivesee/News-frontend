@@ -6,11 +6,12 @@ import ErrorPage from "@/pages/ErrorPage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
 import SignInPage from "@/pages/SignInPage.vue";
 
+import { useMain } from "./store/main";
 
 const routes: readonly RouteRecordRaw[] = [
   {
     path: "/",
-    name: 'NewsPage',
+    name: "NewsPage",
     component: NewsPage,
     meta: {
       requiresAuth: true,
@@ -68,5 +69,20 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
+router.beforeEach((to, from, next) => {
+  const mainStore = useMain();
+  if (
+    to.name === "NewsPage" ||
+    to.name === "Registration" ||
+    to.name === "SignIn" ||
+    to.name === 'NotFound'
+  ) {
+    mainStore.isHomeLinkVisible = false;
+  } else {
+    mainStore.isHomeLinkVisible = true;
+  }
+
+  next();
+});
 
 export default router;
