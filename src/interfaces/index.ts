@@ -1,4 +1,4 @@
-export interface UserData {
+export interface UserData  {
   email: string;
   password: string;
   firstName: string;
@@ -80,6 +80,17 @@ export interface LoadingIconProps {
   size?: string;
   marginTop?: string;
   alignSelf?: string;
+}
+
+export interface CustomButtonProps {
+  text: string;
+  red?: boolean;
+  blue?: boolean;
+  green?: boolean;
+  disabled?: boolean;
+  right?: boolean;
+  fullWidth?: boolean;
+  big?: boolean;
 }
 
 export interface GetNewsParams {
