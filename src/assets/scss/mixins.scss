@@ -1,0 +1,36 @@
+@mixin btnRedAnimation {
+  background-color: $red-1;
+  transition: background-color 0.1s ease;
+  border: 2px solid $red-2;
+
+  &:hover {
+    background-color: $red-2;
+  }
+}
+
+@mixin btnBlueAnimation {
+  background-color: $blue-1;
+  transition: background-color 0.1s ease;
+  border: 2px solid $blue-2;
+
+  &:hover {
+    background-color: $blue-2;
+  }
+}
+
+@mixin btnGreenAnimation {
+  background-color: $green-1;
+  transition: background-color 0.1s ease;
+  border: 2px solid $green-2;
+
+  &:hover {
+    background-color: $green-2;
+  }
+}
+
+@mixin btnRightSide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}

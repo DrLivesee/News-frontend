@@ -1,0 +1,16 @@
+@import '@/assets/scss/variables.scss';
+
+body {
+  padding: 0px;
+  margin: 0;
+  background-color: $brown-1;
+  padding: 20px 0px;
+}
+
+* {
+  font-family: "Lato", sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: $black-1;
+}
