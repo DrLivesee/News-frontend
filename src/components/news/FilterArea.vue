@@ -4,7 +4,7 @@
       class="search-input"
       :value="newsStore.searchQuery"
       @input="inputSearchHandler"
-      placeholder="Введите заголовок для поиска"
+      placeholder="Поиск по новостям"
     />
     <button
       v-if="newsStore.searchQuery"

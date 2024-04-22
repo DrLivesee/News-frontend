@@ -29,26 +29,25 @@ defineProps<{
   display: flex;
   justify-content: space-between;
   padding: 20px 40px;
-  background-color: #9a8c98;
-  color: #22223b;
+  background-color: $brown-2;
   border-radius: 8px;
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 2px 6px 0px rgba($brown-6, 0.3);
   min-height: 100px;
   max-height: 200px;
   width: 100%;
-  transition: background-color 0.25s, box-shadow 0.25s;
+  transition: background-color 0.1s, box-shadow 0.1s;
   cursor: pointer;
   text-decoration: none;
+  border: 2px solid $brown-5;
 
   &:hover {
-    background-color: #c9ada7;
-    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.6);
+    background-color: $brown-3;
+    box-shadow: 0px 2px 12px 0px rgba($brown-6, 0.5);
   }
 
   &:active {
-    background-color: #4a4e69;
-    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.8);
-    color: #c9ada7;
+    background-color: $brown-4;
+    box-shadow: none;
   }
   .main-content {
     width: 65%;

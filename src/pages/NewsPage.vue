@@ -24,16 +24,22 @@
 import { onMounted, onUnmounted } from "vue";
 
 import { useNews } from "@/store/news";
+// import { useUser } from "@/store/user";
 
 import NewsList from "@/components/news/NewsList.vue";
 import FilterArea from "@/components/news/FilterArea.vue";
 import LoadingIcon from "@/components/UI/LoadingIcon.vue";
 
+
 const newsStore = useNews();
+
+// const userStore = useUser();
 
 onMounted(() => {
   newsStore.fetchNews();
   window.addEventListener("scroll", newsStore.handleScroll);
+  // console.log(userStore.user)
+
 });
 
 onUnmounted(() => {
