@@ -4,7 +4,7 @@
       <img :src="userStore.user.avatar" alt="" class="user-avatar" />
     </div>
     <div class="user-name">{{ userStore.user.firstName }}</div>
-    <button class="exit-btn" @click="logOut">Выйти</button>
+    <CustomButton fullWidth red @click="logOut" text="Выйти" />
   </div>
 
   <LoadingIcon v-if="userStore.isLoading"  size="50px" alignSelf="flex-end"/>
@@ -15,6 +15,7 @@ import LoadingIcon from "@/components/UI/LoadingIcon.vue";
 
 import { useUser } from "../store/user";
 import { useRouter } from "vue-router"; 
+import CustomButton from "@/components/UI/CustomButton.vue";
 
 const userStore = useUser();
 const router = useRouter();
@@ -28,9 +29,6 @@ const logOut = async () => {
 <style lang="scss" scoped>
 .user-profile {
   display: flex;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
@@ -56,27 +54,7 @@ const logOut = async () => {
     font-weight: bold;
     font-size: 18px;
   }
-
-  .exit-btn {
-    padding: 5px 10px;
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-
-    &:hover {
-      background-color: #c82333;
-    }
-  }
   
 }
-
-.loading-custom {
-  width: 50px;
-  height: 50px;
-}
-
 
 </style>
