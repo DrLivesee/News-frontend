@@ -23,23 +23,37 @@ import { AxiosResponse } from "axios";
 interface ICommentsStore {
   comments: IComment[];
   loadingComments: boolean;
-  loadComment: boolean;
   totalCountComments: number;
+  loadingCommentDelete: boolean;
+  loadingCommentEdit: boolean;
+  loadingCommentAdd: boolean;
+  showEditingCommentText: boolean;
+  editingCommentText: string;
+  editingCommentId: string;
+  deletingCommentId: string;
 }
 
 export const useComments = defineStore("comments", () => {
   const state: ICommentsStore = reactive({
     comments: [],
     loadingComments: false,
-    loadComment: false,
     totalCountComments: 0,
+    loadingCommentDelete: false,
+    loadingCommentEdit: false,
+    loadingCommentAdd: false,
+    showEditingCommentText: false,
+    editingCommentText: '',
+    editingCommentId: '',
+    deletingCommentId: 'string',
   });
 
   const userStore = useUser();
   const newsStore = useNews();
 
   const fetchCommentsForNews = async (newsId: string): Promise<void> => {
-    state.loadingComments = true;
+    if (!state.comments.length) {
+      state.loadingComments = true;
+    }
 
     try {
       const response: AxiosResponse<ApiCommentsResponse> =
@@ -54,8 +68,8 @@ export const useComments = defineStore("comments", () => {
   };
 
   const addCommentForNews = async (text: string): Promise<void> => {
+    
     try {
-      state.loadComment = true;
       if (userStore.user && newsStore.selectedNews) {
         const comment: IPostComment = {
           name: `${userStore.user.firstName} ${userStore.user.lastName}`,
@@ -64,40 +78,42 @@ export const useComments = defineStore("comments", () => {
           userId: userStore.user._id,
           newsId: newsStore.selectedNews._id,
         } as IPostComment;
+
+        // console.log(comment)
         await addComment(comment);
+        // console.log(state.loadingCommentAdd, 'add')
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      state.loadComment = false;
-    }
+    } 
   };
 
   const editCommentForNews = async (
     id: string,
     text: string
   ): Promise<void> => {
+    
     try {
-      state.loadComment = true;
       if (userStore.user && newsStore.selectedNews) {
         const comment: IPatchComment = {
           text: text,
         };
         await patchComment(id, comment);
+        // console.log(state.loadingCommentEdit, 'edit')
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      state.loadComment = false;
-    }
+    } 
   };
 
   const deleteComment = async (id: string): Promise<void> => {
+    
     try {
       await deleteCommentById(id);
+      // console.log(state.loadingCommentDelete, 'delete')
     } catch (error) {
       console.log(error);
-    }
+    } 
   };
 
   return {

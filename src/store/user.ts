@@ -62,7 +62,7 @@ export const useUser = defineStore("user", () => {
           isAdmin,
         });
 
-        console.log(response)
+        // console.log(response)
       localStorage.setItem("token", response.data.accessToken);
       state.isAuth = true;
       state.user = response.data.user;
