@@ -1,17 +1,17 @@
 import { useComments } from "@/store/comments";
-import { ref, Ref } from "vue";
+import { computed, ComputedRef, ref, Ref } from "vue";
 import { useRoute } from "vue-router";
 
 interface CommentsUtil {
-  commentText: Ref<string>;
-  editingCommentText: Ref<string>;
+  addCommentText: Ref<string>;
   showComments: Ref<boolean>;
-  showEditInput: Ref<boolean>;
+  isDisableAddingComment: ComputedRef<boolean>;
   addCommentHandler: () => Promise<void>;
   deleteCommentHandler: (id: string) => Promise<void>;
   toggleComments: () => void;
-  showEdit: (text: string) => void;
-  editCommentHandler: (id: string) => Promise<void>;
+  showEdit: (text: string, id: string) => void;
+  editCommentHandler: (id: string, text: string) => Promise<void>;
+  cancelEditing: () => void;
 }
 
 export function useCommentsUtil(): CommentsUtil {
@@ -19,56 +19,108 @@ export function useCommentsUtil(): CommentsUtil {
 
   const commentsStore = useComments();
 
-  const commentText = ref("");
-  const editingCommentText = ref("");
+  const addCommentText = ref("");
   const showComments = ref(false);
-  const showEditInput = ref(false);
+
+  const isDisableAddingComment = computed(() => {
+    return (
+      commentsStore.loadingCommentDelete ||
+      commentsStore.loadingCommentEdit ||
+      commentsStore.loadingCommentAdd
+    );
+  });
 
   const routeId = Array.isArray(route.params.id)
     ? route.params.id[0]
     : route.params.id;
 
-  const addCommentHandler = async () => {
-    await commentsStore.addCommentForNews(commentText.value);
-    commentText.value = "";
-    await commentsStore.fetchCommentsForNews(routeId);
-  };
-
-  const deleteCommentHandler = async (id: string) => {
-    await commentsStore.deleteComment(id);
-    await commentsStore.fetchCommentsForNews(routeId);
-
-    if (editingCommentText.value) {
-      editingCommentText.value = "";
-      showEditInput.value = false;
+  const addCommentHandler = async (): Promise<void> => {
+    commentsStore.loadingCommentAdd = true;
+    try {
+      await commentsStore.addCommentForNews(addCommentText.value.trim());
+      addCommentText.value = "";
+      await commentsStore.fetchCommentsForNews(routeId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      commentsStore.loadingCommentAdd = false;
     }
   };
 
-  const toggleComments = () => {
-    showComments.value = !showComments.value;
-  };
-
-  const showEdit = (text: string) => {
-    editingCommentText.value = text;
-    showEditInput.value = true;
-  };
-
-  const editCommentHandler = async (id: string) => {
-    if (!editingCommentText.value) {
+  const deleteCommentHandler = async (id: string): Promise<void> => {
+    commentsStore.loadingCommentDelete = true;
+    commentsStore.deletingCommentId = id;
+    try {
       await commentsStore.deleteComment(id);
-    } else {
-      await commentsStore.editCommentForNews(id, editingCommentText.value);
+      await commentsStore.fetchCommentsForNews(routeId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      if (commentsStore.editingCommentText) {
+        commentsStore.editingCommentText = "";
+        commentsStore.showEditingCommentText = false;
+      }
+
+      commentsStore.loadingCommentDelete = false;
+      commentsStore.deletingCommentId = "";
+      commentsStore.editingCommentId = "";
     }
-    await commentsStore.fetchCommentsForNews(routeId);
-    editingCommentText.value = "";
-    showEditInput.value = false;
+  };
+
+  const toggleComments = async (): Promise<void> => {
+    showComments.value = !showComments.value;
+    if (!commentsStore.comments.length) {
+      await commentsStore.fetchCommentsForNews(routeId);
+    }
+    // console.log(commentsStore.comments)
+  };
+
+  const showEdit = (text: string, id: string) => {
+    commentsStore.editingCommentId = id;
+    commentsStore.editingCommentText = text.trim();
+    commentsStore.showEditingCommentText = true;
+  };
+
+  const cancelEditing = () => {
+    commentsStore.editingCommentId = "";
+    commentsStore.editingCommentText = "";
+    commentsStore.showEditingCommentText = false;
+  };
+
+  const editCommentHandler = async (
+    id: string,
+    text: string
+  ): Promise<void> => {
+    if (commentsStore.editingCommentText.trim() === text.trim()) {
+      cancelEditing();
+      commentsStore.loadingCommentEdit = false;
+      return;
+    }
+
+    commentsStore.loadingCommentEdit = true;
+    try {
+      if (!commentsStore.editingCommentText.trim()) {
+        await commentsStore.deleteComment(id);
+      } else {
+        await commentsStore.editCommentForNews(
+          id,
+          commentsStore.editingCommentText
+        );
+      }
+      await commentsStore.fetchCommentsForNews(routeId);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      cancelEditing();
+      commentsStore.loadingCommentEdit = false;
+    }
   };
 
   return {
-    commentText,
-    editingCommentText,
+    addCommentText,
     showComments,
-    showEditInput,
+    isDisableAddingComment,
+    cancelEditing,
     addCommentHandler,
     deleteCommentHandler,
     toggleComments,
