@@ -17,51 +17,26 @@
       <input
         class="edit-input"
         v-if="
-          showEditInput &&
+          commentsStore.showEditingCommentText &&
           userStore.user &&
-          comment.userId === userStore.user._id
+          comment.userId === userStore.user._id &&
+          commentsStore.editingCommentId === comment._id
         "
+        @keyup.enter="editCommentHandler(comment._id, comment.text)"
+        @keyup.esc="cancelEditing"
         type="text"
-        v-model="editingCommentText"
+        v-model="commentsStore.editingCommentText"
       />
       <div v-else class="comment-text">{{ comment.text }}</div>
       <p class="comment-date">
         {{ format(new Date(comment.createdAt), "MMMM d, yyyy HH:mm:ss") }}
       </p>
     </div>
-    <div class="btns">
-      <button
-        class="edit-button btn"
-        v-if="
-          !showEditInput &&
-          userStore.user &&
-          comment.userId === userStore.user._id
-        "
-        @click="showEdit(comment.text)"
-      >
-        <i class="material-icons">edit</i>
-      </button>
 
-      <button
-        class="edit-button btn"
-        v-if="
-          showEditInput &&
-          userStore.user &&
-          comment.userId === userStore.user._id
-        "
-        @click="editCommentHandler(comment._id)"
-      >
-        <i class="material-icons">check</i>
-      </button>
-
-      <button
-        class="delete-button btn"
-        v-if="userStore.user && comment.userId === userStore.user._id"
-        @click="deleteCommentHandler(comment._id)"
-      >
-        <i class="material-icons">delete</i>
-      </button>
-    </div>
+    <CommentControls
+      v-if="userStore.user && comment.userId === userStore.user._id"
+      :comment="comment"
+    />
   </div>
 </template>
 
@@ -69,30 +44,32 @@
 import { IComment } from "@/interfaces";
 import { format } from "date-fns";
 import { useUser } from "@/store/user";
+import { useComments } from "@/store/comments";
+
 import { useCommentsUtil } from "@/helpers/comments";
 
+import CommentControls from "@/components/comments/CommentControls.vue";
+
 const userStore = useUser();
+const commentsStore = useComments();
 
 defineProps<{
-  comment: IComment,
+  comment: IComment;
 }>();
 
 
-const {
-  showEditInput,
-  editingCommentText,
-  showEdit,
-  editCommentHandler,
-  deleteCommentHandler,
-} = useCommentsUtil();
+const { editCommentHandler, cancelEditing } = useCommentsUtil();
+
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/scss/variables.scss";
 .comment {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   width: 100%;
+
+  
 
   .user-avatar-container {
     width: 50px;
@@ -124,6 +101,8 @@ const {
   .comment-content {
     flex: 1;
     overflow: hidden;
+    border-top: 2px solid $brown-5; 
+    padding-top: 10px;
   }
 
   .comment-author {
@@ -151,34 +130,6 @@ const {
   .comment-date {
     color: #777;
     margin-bottom: 8px;
-  }
-
-  .likes {
-    color: #4a4e69;
-  }
-
-  .btns {
-    display: flex;
-    gap: 5px;
-
-    .btn {
-      border: none;
-      outline: none;
-      cursor: pointer;
-      background: none;
-    }
-
-    .edit-button {
-      i {
-        color: #47a76a;
-      }
-    }
-
-    .delete-button {
-      i {
-        color: #ff2400;
-      }
-    }
   }
 }
 </style>

@@ -1,76 +1,76 @@
 <template>
   <div class="comments-area">
-    <button @click="toggleComments" class="toggle-comments">Комментарии</button>
+    <CustomButton blue text="Комментарии" @click="toggleComments"/>
 
     <div v-show="showComments" class="comments">
-      <CommentsList :comments="commentsStore.comments" />
-
       <div class="add-comment">
         <input
           type="text"
-          :disabled="commentsStore.loadComment"
-          v-model="commentText"
+          :disabled="isDisableAddingComment"
+          v-model="addCommentText"
           class="comment-input"
           placeholder="Добавьте комментарий..."
+          @keyup.enter="addCommentHandler"
         />
-        <button
-          :disabled="commentsStore.loadComment"
-          @click="addCommentHandler"
-          class="add-comment-button"
-        >
-          Добавить комментарий
-        </button>
+
+        <CustomButton blue text="Добавить комментарий" @click="addCommentHandler" :disabled="isDisableAddingComment || !addCommentText"/>
+        
       </div>
+
+      <CommentsList/>
+      <LoadingIcon
+        v-if="commentsStore.loadingComments"
+        size="50px"
+        alignSelf="center"
+      />
+      <LoadingIcon v-if="commentsStore.loadingCommentAdd" size="50px" />
+
+      
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+
 import { useComments } from "@/store/comments";
 import { useCommentsUtil } from "@/helpers/comments";
 
-import CommentsList from "./CommentsList.vue";
+import CommentsList from "@/components/comments/CommentsList.vue";
+import LoadingIcon from "@/components/UI/LoadingIcon.vue";
+import CustomButton from "@/components//UI/CustomButton.vue";
 
 const commentsStore = useComments();
 
-const { toggleComments, showComments, commentText,addCommentHandler } = useCommentsUtil();
+const {
+  isDisableAddingComment,
+  showComments,
+  addCommentText,
+  toggleComments,
+  addCommentHandler,
+} = useCommentsUtil();
+
+
 
 </script>
 
 <style lang="scss" scoped>
 .comments-area {
-  .toggle-comments {
-    margin-top: 16px;
-    cursor: pointer;
-    color: #22223b;
-    background-color: #f2e9e4;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: #c9ada7;
-    }
-
-    &:active {
-      background-color: #4a4e69;
-      color: #c9ada7;
-    }
-  }
+  padding-top: 16px;
 
   .comments {
     margin-top: 16px;
-    padding: 16px;
-    background-color: #f2e9e4;
+    padding: 24px 16px;
+    background-color: $brown-1;
     color: #22223b;
     border-radius: 4px;
     width: 100%;
+    box-shadow: 0px 0px 5px 0px rgba($brown-6,0.8) inset;
 
     .add-comment {
       display: flex;
       align-items: center;
-      margin-top: 16px;
+      margin-bottom: 32px;
+      
     }
 
     .comment-input {
@@ -84,32 +84,6 @@ const { toggleComments, showComments, commentText,addCommentHandler } = useComme
       &:focus {
         outline: none;
         border-color: #9a8c98;
-      }
-    }
-
-    .add-comment-button {
-      cursor: pointer;
-      background-color: #9a8c98;
-      font-weight: bold;
-      color: #22223b;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      transition: background-color 0.25s;
-
-      &:hover {
-        background-color: #c9ada7;
-      }
-
-      &:active {
-        background-color: #4a4e69;
-        color: #c9ada7;
-      }
-
-      &:disabled {
-        cursor: not-allowed;
-        background-color: #ccc;
-        color: #888;
       }
     }
   }

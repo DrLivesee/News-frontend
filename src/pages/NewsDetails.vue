@@ -40,6 +40,7 @@ import { useNews } from "@/store/news";
 import LoadingIcon from "@/components/UI/LoadingIcon.vue";
 import CommentsArea from "@/components/comments/CommentsArea.vue";
 
+
 const route = useRoute();
 
 const newsStore = useNews();
@@ -50,6 +51,8 @@ onMounted(async () => {
     : route.params.id;
 
   await newsStore.getNewsById(routeId);
+  // console.log(newsStore.selectedNews)
+  
 });
 
 onUnmounted(() => {
@@ -66,11 +69,11 @@ onUnmounted(() => {
   .news-details {
     max-width: 900px;
     margin: 0 auto;
-    background-color: #9a8c98;
-    color: #22223b;
+    background-color: $brown-3;
+    border: 2px solid $brown-5;
     padding: 20px 40px;
     border-radius: 8px;
-    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 12px 0px rgba($brown-6, 0.5);
 
     .news-title {
       font-size: 24px;
