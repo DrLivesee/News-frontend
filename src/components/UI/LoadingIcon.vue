@@ -13,21 +13,6 @@ withDefaults(defineProps<LoadingIconProps>(), {
   marginTop: '0',
   alignSelf: 'baseline'
 })
-
-// defineProps<LoadingIconProps>({
-//   size: {
-//     type: String,
-//     default: '40px'
-//   },
-//   marginTop: {
-//     type: String,
-//     default: '0'
-//   },
-//   alignSelf: {
-//     type: String,
-//     default: 'baseline'
-//   }
-// });
 </script>
 
 <style lang="scss" scoped>
