@@ -80,12 +80,12 @@ const { editCommentHandler, cancelEditing } = useCommentsUtil();
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #9a8c98;
+    background-color: $brown-3;
 
     .user-avatar {
       display: block;
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
 
       object-fit: cover;
     }
@@ -119,7 +119,7 @@ const { editCommentHandler, cancelEditing } = useCommentsUtil();
     background: none;
     outline: none;
     font-size: 16px;
-    background-color: white;
+    background-color: $white-1;
   }
 
   .comment-text {

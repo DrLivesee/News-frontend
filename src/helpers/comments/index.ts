@@ -8,7 +8,7 @@ interface CommentsUtil {
   isDisableAddingComment: ComputedRef<boolean>;
   addCommentHandler: () => Promise<void>;
   deleteCommentHandler: (id: string) => Promise<void>;
-  toggleComments: () => void;
+  toggleComments: () => Promise<void>;
   showEdit: (text: string, id: string) => void;
   editCommentHandler: (id: string, text: string) => Promise<void>;
   cancelEditing: () => void;
@@ -69,19 +69,19 @@ export function useCommentsUtil(): CommentsUtil {
 
   const toggleComments = async (): Promise<void> => {
     showComments.value = !showComments.value;
+
     if (!commentsStore.comments.length) {
       await commentsStore.fetchCommentsForNews(routeId);
     }
-    // console.log(commentsStore.comments)
   };
 
-  const showEdit = (text: string, id: string) => {
+  const showEdit = (text: string, id: string): void => {
     commentsStore.editingCommentId = id;
     commentsStore.editingCommentText = text.trim();
     commentsStore.showEditingCommentText = true;
   };
 
-  const cancelEditing = () => {
+  const cancelEditing = (): void => {
     commentsStore.editingCommentId = "";
     commentsStore.editingCommentText = "";
     commentsStore.showEditingCommentText = false;
