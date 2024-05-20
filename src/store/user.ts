@@ -11,7 +11,7 @@ import {
   UserDataToSignIn,
   UserData,
   ApiValidateResponse,
-  PostImageResponse
+  PostImageResponse,
 } from "@/interfaces";
 import * as AuthService from "@/service/AuthService";
 
@@ -31,9 +31,10 @@ export const useUser = defineStore("user", () => {
   const router = useRouter();
 
   const login = async (user: UserDataToSignIn): Promise<void> => {
+    const { email, password } = user;
     try {
       const response: AxiosResponse<{ accessToken: string; user: User }> =
-        await AuthService.login(user);
+        await AuthService.login({ email, password });
       localStorage.setItem("token", response.data.accessToken);
       state.isAuth = true;
       state.user = response.data.user;
@@ -42,7 +43,7 @@ export const useUser = defineStore("user", () => {
     }
   };
 
-  const registration = async (user: UserData):Promise<void> => {
+  const registration = async (user: UserData): Promise<void> => {
     const {
       email,
       password,
@@ -62,7 +63,8 @@ export const useUser = defineStore("user", () => {
           isAdmin,
         });
 
-        // console.log(response)
+      // console.log(response)
+
       localStorage.setItem("token", response.data.accessToken);
       state.isAuth = true;
       state.user = response.data.user;
@@ -71,22 +73,62 @@ export const useUser = defineStore("user", () => {
     }
   };
 
-  const validate = async (user: UserDataToValidate): Promise<ApiValidateResponse | void> => {
+  const validateLogin = async (
+    user: UserDataToValidate
+  ): Promise<ApiValidateResponse | void> => {
     try {
-      const resp: AxiosResponse<ApiValidateResponse> = await AuthService.validate(user);
-      
+      const resp: AxiosResponse<ApiValidateResponse> =
+        await AuthService.validateLogin(user);
+
       return resp.data;
     } catch (e) {
       console.log((e as ErrorResponse).message);
     }
   };
 
-  const logout = async ():Promise<void> => {
+  const validate = async (
+    user: UserDataToValidate
+  ): Promise<ApiValidateResponse | void> => {
+    try {
+      const resp: AxiosResponse<ApiValidateResponse> =
+        await AuthService.validate(user);
+
+      return resp.data;
+    } catch (e) {
+      console.log((e as ErrorResponse).message);
+    }
+  };
+
+  const logout = async (): Promise<void> => {
     try {
       await AuthService.logout();
       localStorage.removeItem("token");
+      localStorage.removeItem("search");
       state.isAuth = false;
       state.user = null;
+    } catch (e) {
+      console.log((e as ErrorResponse).message);
+    }
+  };
+
+  const deleteAvatar = async (): Promise<void> => {
+    try {
+      if (state.user?.avatar.avatarUrl) {
+        const public_id = state.user.avatar.public_id.split("/")[1];
+        await axios.delete(`http://localhost:3000/image/delete/${public_id}`);
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteUser = async (id: string): Promise<void> => {
+    try {
+      await AuthService.deleteUser(id);
+      await deleteAvatar();
+      await logout();
     } catch (e) {
       console.log((e as ErrorResponse).message);
     }
@@ -104,7 +146,6 @@ export const useUser = defineStore("user", () => {
       state.user = response.data.user;
     } catch (e) {
       await logout();
-      // TODO: podumat, ne tut
       router.push("/sign-in");
       console.log((e as ErrorResponse).message);
     } finally {
@@ -117,25 +158,25 @@ export const useUser = defineStore("user", () => {
       const formData: FormData = new FormData();
       formData.append("file", file);
 
-      const response: AxiosResponse<{ success: boolean; message: string; data?: any }> = await axios.post(
-        "http://localhost:3000/upload-image",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response: AxiosResponse<{
+        success: boolean;
+        message: string;
+        data?: any;
+      }> = await axios.post("http://localhost:3000/image/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status !== 200) {
         throw new Error("Failed to upload image");
       }
 
       const data: PostImageResponse = response.data;
-      console.log("Image uploaded successfully:", data);
+
       return data;
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error uploading image", error);
       throw error;
     }
   };
@@ -144,8 +185,10 @@ export const useUser = defineStore("user", () => {
     ...toRefs(state),
     login,
     registration,
+    validateLogin,
     validate,
     logout,
+    deleteUser,
     checkAuth,
     uploadImage,
   };
