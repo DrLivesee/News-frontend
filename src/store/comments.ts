@@ -73,7 +73,7 @@ export const useComments = defineStore("comments", () => {
       if (userStore.user && newsStore.selectedNews) {
         const comment: IPostComment = {
           name: `${userStore.user.firstName} ${userStore.user.lastName}`,
-          avatar: userStore.user.avatar,
+          avatar: userStore.user.avatar.avatarUrl,
           text: text,
           userId: userStore.user._id,
           newsId: newsStore.selectedNews._id,
@@ -105,6 +105,24 @@ export const useComments = defineStore("comments", () => {
       console.log(error);
     } 
   };
+
+  // const editCommentsForNews = async (
+  //   id: string,
+  //   text: string
+  // ): Promise<void> => {
+    
+  //   try {
+  //     if (userStore.user && newsStore.selectedNews) {
+  //       const comment: IPatchComment = {
+  //         text: text,
+  //       };
+  //       await patchComment(id, comment);
+  //       // console.log(state.loadingCommentEdit, 'edit')
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   } 
+  // };
 
   const deleteComment = async (id: string): Promise<void> => {
     
