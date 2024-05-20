@@ -34,3 +34,39 @@
   bottom: 0;
   right: 0;
 }
+
+@mixin baseInput {
+  width: 100%;
+  color: $black-1;
+  outline: none;
+  border: 2px solid $blue-1;
+  background-color: $white-1;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  height: 40px;
+
+  &:focus {
+    border: 2px solid $blue-2;
+  }
+
+  &::placeholder {
+    font-size: 16px;
+    color: $black-2;
+  }
+}
+
+@mixin baseBtn {
+  padding: 5px 10px;
+  outline: none;
+  color: $white-1;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+@mixin bigBtn {
+  padding: 8px 12px;
+  font-size: 16px;
+}

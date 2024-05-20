@@ -1,10 +1,18 @@
 @import '@/assets/scss/variables.scss';
 
+html {
+  overflow-x: hidden;
+  margin-right: calc(-1 * (100vw - 100%));
+}
+
 body {
   padding: 0px;
   margin: 0;
   background-color: $brown-1;
-  padding: 20px 0px;
+}
+
+h1 {
+  margin-bottom: 24px;
 }
 
 * {
@@ -13,4 +21,29 @@ body {
   margin: 0;
   box-sizing: border-box;
   color: $black-1;
+}
+
+/* Стили для линии прокрутки */
+::-webkit-scrollbar {
+  position: absolute;
+  overflow: hidden;
+  width: 10px; /* Ширина линии прокрутки */
+  
+}
+
+/* Цвет и прозрачность фона линии прокрутки */
+::-webkit-scrollbar-track {
+  background-color: rgba($white-1, 0.8); /* Полупрозрачный белый цвет */
+  border-radius: 10px;
+}
+
+/* Цвет и прозрачность бегунка прокрутки */
+::-webkit-scrollbar-thumb {
+  background-color: rgba($brown-4, 1); /* Полупрозрачный черный цвет */
+  border-radius: 10px;
+}
+
+/* Уменьшение прозрачности линии прокрутки при наведении */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba($brown-5, 1); /* Увеличенная прозрачность при наведении */
 }
