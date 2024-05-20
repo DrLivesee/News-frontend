@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link class="home-link" to="/">
-      <i class="material-icons">arrow_back</i><span class="home-link-text">на главную</span>
+      <i class="material-icons">arrow_back</i><span class="home-link-text">На главную</span>
     </router-link>
   </div>
 </template>
