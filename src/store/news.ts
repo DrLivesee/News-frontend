@@ -9,6 +9,7 @@ import { AxiosResponse } from "axios";
 interface INewsState {
   news: INews[];
   loading: boolean;
+  isLoadingInputSearchNews: boolean;
   searchQuery: string;
   page: number;
   limit: number;
@@ -23,6 +24,7 @@ export const useNews = defineStore("news", () => {
   const state: INewsState = reactive({
     news: [] as INews[],
     loading: false,
+    isLoadingInputSearchNews: false,
     searchQuery: "",
     page: 1,
     limit: 10,
@@ -46,6 +48,7 @@ export const useNews = defineStore("news", () => {
       };
       const response: AxiosResponse<ApiNewsResponse> =
         await NewsService.getNews(params);
+
       state.totalCountNews = response.data.totalDocuments;
       state.news = [...state.news, ...response.data.news];
       state.page++;
@@ -58,7 +61,7 @@ export const useNews = defineStore("news", () => {
   };
 
   const handleSearchInput = async (): Promise<void> => {
-    state.loading = true;
+    state.isLoadingInputSearchNews = true;
     state.hasMore = true;
     state.page = 1;
     if (state.fetchNewsTimer !== null) {
@@ -67,8 +70,13 @@ export const useNews = defineStore("news", () => {
     state.news = [];
     state.fetchNewsTimer = setTimeout(async () => {
       await fetchNews();
-    }, 250);
-    state.loading = false;
+      state.isLoadingInputSearchNews = false;
+      if (state.searchQuery) {
+        localStorage.setItem("search", state.searchQuery);
+      } else {
+        localStorage.removeItem("search");
+      }
+    }, 500);
   };
 
   const handleScroll = async (): Promise<void> => {
