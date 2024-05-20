@@ -1,7 +1,7 @@
 <template>
   <div class="app-header" :class="{ 'app-header-user-profile-only': !mainStore.isHomeLinkVisible }">
     <HomeLink v-if="mainStore.isHomeLinkVisible" />
-    <UserProfile />
+    <UserProfile  v-if="mainStore.isUserProfileVisible"/>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ const mainStore = useMain();
   align-items: center;
   width: 100%;
   max-width: 900px;
+  padding: 20px 0px;
   margin: 0 auto;
 }
 .app-header-user-profile-only {
