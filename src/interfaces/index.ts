@@ -3,15 +3,20 @@ export interface UserData  {
   password: string;
   firstName: string;
   lastName: string;
-  avatar: string;
+  avatar: IAvatar;
   isAdmin: boolean;
+}
+
+export interface IAvatar {
+  avatarUrl: string;
+  public_id: string;
 }
 
 export interface UserDataToValidate {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface UserDataToSignIn {
@@ -47,12 +52,13 @@ export interface ErrorResponse {
   message: string;
 }
 
+
 export interface User {
   _id: string;
   email: string;
   firstName: string;
   lastName: string;
-  avatar: string;
+  avatar: IAvatar;
 }
 
 export interface ApiNewsResponse {
@@ -62,6 +68,11 @@ export interface ApiNewsResponse {
 
 export interface ApiCommentsResponse {
   comments: IComment[];
+  totalDocuments: number;
+}
+
+export interface ApiCommentsForUserResponse {
+  ids: string[]
   totalDocuments: number;
 }
 
@@ -91,6 +102,12 @@ export interface CustomButtonProps {
   right?: boolean;
   fullWidth?: boolean;
   big?: boolean;
+}
+
+export interface CustomInputProps {
+  placeholder?: string;
+  type?: string
+  maxlength?: number
 }
 
 export interface GetNewsParams {
