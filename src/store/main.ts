@@ -4,12 +4,14 @@ import { defineStore } from "pinia";
 
 
 interface IMainStore {
-  isHomeLinkVisible: boolean
+  isHomeLinkVisible: boolean;
+  isUserProfileVisible: boolean;
 }
 
 export const useMain = defineStore("main", () => {
   const state: IMainStore = reactive({
-    isHomeLinkVisible: false
+    isHomeLinkVisible: false,
+    isUserProfileVisible: false,
   });
 
   
