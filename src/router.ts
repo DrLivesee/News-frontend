@@ -71,15 +71,13 @@ router.beforeEach(async (to, from, next) => {
 
 router.beforeEach((to, from, next) => {
   const mainStore = useMain();
-  if (
-    to.name === "NewsPage" ||
-    to.name === "Registration" ||
-    to.name === "SignIn" ||
-    to.name === 'NotFound'
-  ) {
-    mainStore.isHomeLinkVisible = false;
-  } else {
-    mainStore.isHomeLinkVisible = true;
+  
+  if (to.name) {
+    const nonHomeRoutes = ["NewsPage", "Registration", "SignIn", "NotFound"];
+    mainStore.isHomeLinkVisible = !nonHomeRoutes.includes(to.name as string);
+
+    const userProfileRoutes = ["Registration", "SignIn", "NotFound"];
+    mainStore.isUserProfileVisible = !userProfileRoutes.includes(to.name as string);
   }
 
   next();
