@@ -47,13 +47,8 @@ const btnBig = computed(() => {
 
 <style lang="scss" scoped>
 .btn {
-  padding: 5px 10px;
-  outline: none;
-  color: $white-1;
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
+  @include baseBtn;
+
 }
 .btn-red {
   @include btnRedAnimation;
@@ -69,7 +64,7 @@ const btnBig = computed(() => {
 
 .btn-disabled {
   cursor: not-allowed;
-  color: rgb(185, 185, 185);
+  color: $white-2;
 }
 
 .btn-right-side {
@@ -81,7 +76,6 @@ const btnBig = computed(() => {
 }
 
 .btn-big {
-  padding: 8px 12px;
-  font-size: 16px;
+  @include bigBtn;
 }
 </style>
