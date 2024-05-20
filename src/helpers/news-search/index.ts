@@ -10,6 +10,7 @@ export function useNewsSearch(): NewsSearchUtil {
 
   const inputSearchHandler = async (event: Event): Promise<void> => {
     newsStore.searchQuery = (event.target as HTMLInputElement).value;
+
     await newsStore.handleSearchInput();
   };
 

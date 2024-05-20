@@ -6,6 +6,8 @@
       @input="inputSearchHandler"
       placeholder="Поиск по новостям"
     />
+
+    <!-- <CustomInput v-model="newsStore.searchQuery" @input="inputSearchHandler" placeholder="Поиск по новостям"/> -->
     <button
       v-if="newsStore.searchQuery"
       @click="clearInput"
@@ -20,6 +22,7 @@
 <script setup lang="ts">
 import { useNewsSearch } from "@/helpers/news-search";
 import { useNews } from "@/store/news";
+// import CustomInput from "../UI/CustomInput.vue";
 
 const newsStore = useNews();
 
@@ -31,24 +34,9 @@ const { inputSearchHandler, clearInput } = useNewsSearch();
   position: relative;
 
   .search-input {
-    color: #22223b;
-    width: 100%;
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #22223b;
-    border-radius: 4px;
-    margin-right: 8px;
-    font-size: 16px;
-    // line-height: 0px;
-    margin-bottom: 16px;
-
-    &:focus {
-      outline: none;
-    }
-
-    &::placeholder {
-      color: #9a8c98;
-    }
+    margin-bottom: 24px;
+    @include baseInput
+    
   }
 
   .clear-button {
@@ -72,13 +60,13 @@ const { inputSearchHandler, clearInput } = useNewsSearch();
     span {
       display: block;
       transform: rotate(45deg);
-      color: #9a8c98;
+      color: $brown-4;
       transition: color 0.25s ease-in-out;
     }
 
     &:hover {
       span {
-        color: #22223b;
+        color: $brown-6;
       }
     }
   }
