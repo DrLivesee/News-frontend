@@ -1,4 +1,5 @@
 <template>
+  <!-- <div v-if="!filteredNewsList.length && !newsStore.loading">Нет новостей</div> -->
     <div class="news-list">
       <NewsListItem v-for="article in filteredNewsList" :key="article._id" :article="article"/>
     </div>
@@ -7,6 +8,9 @@
 <script setup lang="ts">
 import { INews } from "@/interfaces";
 import NewsListItem from "@/components/news/NewsListItem.vue";
+// import { useNews } from "@/store/news";
+
+// const newsStore = useNews();
 
 defineProps<{
   filteredNewsList: INews[],

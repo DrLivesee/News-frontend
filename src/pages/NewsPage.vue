@@ -6,11 +6,17 @@
       <FilterArea />
 
       <div>
-        <!-- <div v-if="!newsStore.hasMore && newsStore.news.length < 1">No news found</div> -->
-        <NewsList :filteredNewsList="newsStore.news" />
+        
+        <NewsList
+          v-if="newsStore.news.length"
+          :filteredNewsList="newsStore.news"
+        />
+        <div v-else-if="!isLoading">
+          По выбранным фильтрам новостей не нашлось :(
+        </div>
 
         <LoadingIcon
-          v-if="newsStore.loading"
+          v-if="isLoading"
           size="30px"
           marginTop="10px"
           alignSelf="center"
@@ -21,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 
 import { useNews } from "@/store/news";
 // import { useUser } from "@/store/user";
@@ -29,17 +35,29 @@ import { useNews } from "@/store/news";
 import NewsList from "@/components/news/NewsList.vue";
 import FilterArea from "@/components/news/FilterArea.vue";
 import LoadingIcon from "@/components/UI/LoadingIcon.vue";
-
+// import { getCommentsForUser } from "@/service/AuthService";
 
 const newsStore = useNews();
-
 // const userStore = useUser();
 
-onMounted(() => {
-  newsStore.fetchNews();
-  window.addEventListener("scroll", newsStore.handleScroll);
-  // console.log(userStore.user)
+const isLoading = computed(
+  () => newsStore.isLoadingInputSearchNews || newsStore.loading
+);
 
+// const getComments = async () => {
+//   if (userStore.user){
+//     const res = await getCommentsForUser(userStore.user._id);
+//     console.log(res)
+//   } 
+// };
+
+onMounted(async () => {
+  if (localStorage.getItem("search")) {
+    newsStore.searchQuery = localStorage.getItem("search")!;
+  }
+
+  await newsStore.fetchNews();
+  window.addEventListener("scroll", newsStore.handleScroll);
 });
 
 onUnmounted(() => {
@@ -48,24 +66,5 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-.news-page {
-  color: #22223b;
-  width: 100%;
-  padding: 0px 20px;
-  padding-bottom: 20px;
-
-  .news-content {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-
-    .news-title {
-      font-size: 36px;
-      display: block;
-      margin-bottom: 12px;
-    }
-  }
-}
+@import "@/assets/scss/news-page/styles.scss";
 </style>
