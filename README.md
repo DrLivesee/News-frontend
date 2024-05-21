@@ -1,9 +1,54 @@
-# Vue 3 + TypeScript + Vite
+# Веб-приложение для новостей (Frontend)
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Описание
+Frontend часть веб-приложения для новостей, разработанная на Vue 3 с использованием Composition API. Приложение позволяет пользователям регистрироваться с фотографией, авторизовываться, просматривать новости, искать новости, добавлять комментарии к любой новости и управлять ими.
 
-## Recommended Setup
+## Функциональность
+- **Регистрация и авторизация пользователей**
+- **Просмотр новостей:** бесконечный скролл, поиск новостей по ключевым словам
+- **Просмотр и управление комментариями**: добавление, редактирование и удаление своих комментариев
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+## Технологии
+- Vue 3 (Composition API)
+- TypeScript
+- Sass
+- Pinia
+- Vue Router
+- Axios
+- Vite
+- Material Icons
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+## Установка и запуск
+1. Клонируйте репозиторий:
+   ```bash
+   git clone <URL-репозитория>
+   cd <название-папки>
+   ```
+
+2. Установите npm-пакет с помощью команды:
+```sh
+$ npm i 
+```
+
+3. Создайте файл .env в корне проекта и добавьте следующие переменные окружения:
+```sh
+VITE_NEWS_API_URL
+VITE_AUTH_API_URL
+VITE_COMMENTS_API_URL
+```
+
+4. Запустите проект:
+```sh
+npm run dev
+```
+
+## Структура проекта
++ `src/`
+   + `assets/` - статические ресурсы
+   + `components/` - компоненты приложения
+   + `helpers/` - повторно используемые логические функции
+   + `http/` - настройка и создание экземпляров axios
+   + `interfaces/` - интерфейсы typescript
+   + `pages/` - страницы приложения
+   + `service/` - API сервисы для запросов
+   + `store/` - хранилища Pinia
